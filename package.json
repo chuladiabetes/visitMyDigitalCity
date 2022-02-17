@@ -1,7 +1,10 @@
 {
   "scripts": {
-    "build": "webpack --config ./bundler/webpack.prod.js",
-    "dev": "webpack serve --config ./bundler/webpack.dev.js"
+    "heroku-prebuild": "echo This runs before Heroku installs dependencies.",
+    "build": "echo This won't run when there's a heroku-postbuild script. Otherwise it runs instead.",
+    "heroku-postbuild": "echo This runs after Heroku installs dependencies, but before Heroku prunes and caches dependencies.",
+    "heroku-cleanup": "echo This runs after Heroku prunes and caches dependencies.",
+    "start": "echo You can specify you start script here."
   },
   "dependencies": {
     "@babel/core": "^7.12.10",
