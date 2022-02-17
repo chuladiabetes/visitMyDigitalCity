@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
 import {RectAreaLightHelper} from 'three/examples/jsm/helpers/RectAreaLightHelper.js'
+import { PCFShadowMap, PCFSoftShadowMap } from 'three'
 
 //scene
 const scene = new THREE.Scene()
@@ -77,9 +78,6 @@ woodColorTexture.wrapT = THREE.RepeatWrapping
 woodDisplacementTexture.wrapT = THREE.RepeatWrapping
 woodNormalTexture.wrapT = THREE.RepeatWrapping
 woodRoughnessTexture.wrapT = THREE.RepeatWrapping
-
-
-
 
 concreteColorTexture.repeat.set(8, 8)
 concreteDisplacementTexture.repeat.set(8, 8)
@@ -210,6 +208,8 @@ wall1.geometry.setAttribute(
     new THREE.Float32BufferAttribute(wall1.geometry.attributes.uv.array, 2)
 )
 
+wall1.castShadow = true
+
 
 const wall2 = new THREE.Mesh(house1WallGeometry1, house1wallMaterial)
 wall2.position.x = 1
@@ -220,6 +220,8 @@ wall2.geometry.setAttribute(
     'uv2',
     new THREE.Float32BufferAttribute(wall2.geometry.attributes.uv.array, 2)
 )
+wall2.castShadow = true
+
 
 const wall3 = new THREE.Mesh(house1WallGeometry2, house1wallMaterial)
 wall3.position.x = -3.5
@@ -231,7 +233,7 @@ wall3.geometry.setAttribute(
     new THREE.Float32BufferAttribute(wall3.geometry.attributes.uv.array, 2)
 )
 house1.add(wall1, wall2, wall3) 
-
+wall3.castShadow = true
 
 //walls
 const houseBody = new THREE.Mesh(
@@ -248,6 +250,7 @@ houseBody.geometry.setAttribute(
     'uv2',
     new THREE.Float32BufferAttribute(houseBody.geometry.attributes.uv.array, 2)
 )
+houseBody.castShadow = true
 
 
 houseBody.position.y = 2.5 / 2 
@@ -265,6 +268,7 @@ roof.position.z = -7
 roof.position.x = -5
 roof.rotation.y = Math.PI * 0.25
 house1.add(roof)
+roof.castShadow = true
 
 //door
 const door = new THREE.Mesh(
@@ -286,7 +290,7 @@ door.geometry.setAttribute(
     'uv2',
     new THREE.Float32BufferAttribute(door.geometry.attributes.uv.array, 2)
 )
-
+door.castShadow = true
 
 door.position.y = 2 / 2 
 door.position.z = -5.001
@@ -297,6 +301,7 @@ house1.add(door)
 const doorLight = new THREE.PointLight('#ff7d46', 1, 7)
 doorLight.position.set(-5, 2, -4.5)
 house1.add(doorLight)
+doorLight.castShadow = true
 
 //fog
 // const fog = new THREE.Fog('#262837', 15, 15)
@@ -347,6 +352,7 @@ concreteFloorNightMarket.position.x = -5.3
 concreteFloorNightMarket.position.z = 5.85
 concreteFloorNightMarket.position.y = 0.01
 nightMarket.add(concreteFloorNightMarket)
+concreteFloorNightMarket.castShadow = true
 
 //stick
 const stickTentGeometry = new THREE.BoxGeometry(0.1, 1, 0.1);
@@ -360,6 +366,7 @@ for (let x = 0; x < tentx.length; x++){
     for (let z = 9; z > 3; z--){
         const sticks = new THREE.Mesh(stickTentGeometry, stickTentMaterial);
         sticks.position.set(tentx[x], tenty, z)
+        sticks.castShadow = true
         nightMarket.add(sticks)
     }
 }
@@ -378,7 +385,11 @@ const roofMaterial4 = new THREE.MeshStandardMaterial({ color: 0xFF0000 })
 const roofMaterial5 = new THREE.MeshStandardMaterial({ color: 0x00FFFF })
 
 const roofMaterial = [roofMaterial1, roofMaterial2, roofMaterial3, roofMaterial4, roofMaterial5]
-
+// roofMaterial1.castShadow = true
+// roofMaterial2.castShadow = true
+// roofMaterial3.castShadow = true
+// roofMaterial4.castShadow = true
+// roofMaterial5.castShadow = true
 // const roof1 = new THREE.Mesh(roofGeometry, roofMaterial)
 // roof1.position.y =  1.2
 // roof1.position.x = -9
@@ -407,6 +418,7 @@ for (let a = 0; a < roofx.length; a++){
         const roofs = new THREE.Mesh(roofGeometry, roofMaterial[Math.floor(Math.random() * roofMaterial.length)])
         roofs.position.set(roofx[a], 1.2, roofz[b])
         roofs.rotation.y = Math.PI * 0.25
+        roofs.castShadow = true
         nightMarket.add(roofs)
     }
 }
@@ -414,6 +426,7 @@ for (let a = 0; a < roofx.length; a++){
 // light from the market
 const marketLight1 = new THREE.PointLight('#ffbb73', 1, 3, 1)
 marketLight1.position.set(-7, 1.5, 6.5)
+marketLight1.castShadow = true
 nightMarket.add(marketLight1)
 
 const marketLight2 = new THREE.PointLight('#ffbb73', 1, 3, 1)
@@ -456,6 +469,7 @@ const chairMaterial = new THREE.MeshStandardMaterial({
 for (let bushx = 9; bushx > 1; bushx--){
     const chairsx = new THREE.Mesh(chairGeometry, chairMaterial)
     chairsx.position.set(-bushx, 0.3, 2.5)
+    chairsx.castShadow = true
     nightMarket.add(chairsx)
 }
 
@@ -463,6 +477,7 @@ for (let bushz = 4; bushz < 10; bushz++){
     console.log("bushz", bushz)
     const chairsz = new THREE.Mesh(chairGeometry, chairMaterial)
     chairsz.position.set(-1.3, 0.3, bushz)
+    chairsz.castShadow = true
     nightMarket.add(chairsz)
 }
 
@@ -549,6 +564,7 @@ for (let x = 0; x < 7; x++){
     } else {
         var base1 = new THREE.Mesh(baseGeometry1, baseMaterial);
     }
+    base1.castShadow = true
     base1.position.set(7, 0.4 * x, 7)
     baiyoke.add(base1)
 }
@@ -691,7 +707,7 @@ for (let y = 0; y < 20; y++){
                 else {
                     var blocks = new THREE.Mesh(block, blockMaterial)
                 }
-                
+                blocks.castShadow = true
                 blocks.position.set(x / 2, y/2 , -z / 2)
                 mahanakorn.add(blocks)
             // }
@@ -835,36 +851,46 @@ const bushMaterial = new THREE.MeshStandardMaterial({ color: '#89c854' })
 const bush1 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush1.scale.set(0.5, 0.5, 0.5)
 bush1.position.set(-1.3, 0.2, 1.2)
+bush1.castShadow = true
 
 const bush2 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush2.scale.set(0.25, 0.25, 0.25)
 bush2.position.set(-0.7, 0.1, 1.2)
+bush2.castShadow = true
 
 const bush3 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush3.scale.set(0.25, 0.25, 0.25)
 bush3.position.set(-1.6, 0.2, -2.7)
+bush3.castShadow = true
 
 const bush4 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush4.scale.set(0.5, 0.5, 0.5)
 bush4.position.set(-1, 0.1, -2.9)
+bush4.castShadow = true
 
 const bush5 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush5.scale.set(0.25, 0.25, 0.25)
 bush5.position.set(2.7, 0.2, -2.7)
+bush5.castShadow = true
 
 const bush6 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush6.scale.set(0.5, 0.5, 0.5)
 bush6.position.set(2.5, 0.2, -2)
+bush6.castShadow = true
 
 const bush7 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush7.scale.set(0.5, 0.5, 0.5)
 bush7.position.set(2.5, 0.2, 1.2)
+bush7.castShadow = true
 
 const bush8 = new THREE.Mesh(bushGeometry, bushMaterial)
 bush8.scale.set(0.25, 0.25, 0.25)
 bush8.position.set(2, 0.2, 1.2)
+bush8.castShadow = true
 
 mahanakorn.add(bush1, bush2, bush3, bush4, bush5, bush6, bush7, bush8)
+
+
 
 
 // x = 0, 1, 2, 3
@@ -906,7 +932,22 @@ const renderer = new THREE.WebGLRenderer({
     canvas
 })
 
+//shadow
+renderer.shadowMap.enabled = true
+renderer.shadowMap.type = PCFSoftShadowMap
 
+floor.receiveShadow = true
+grassfloorBaiyoke.receiveShadow = true
+grassfloorMahanakorn.receiveShadow = true
+concreteFloorNightMarket.receiveShadow = true
+road1.receiveShadow = true
+road2.receiveShadow = true
+road3.receiveShadow = true
+
+
+moonLight.castShadow = true
+doorLight.castShadow = true
+// mahanakorn.castShadow = true
 
 
 

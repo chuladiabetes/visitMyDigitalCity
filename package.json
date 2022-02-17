@@ -23,5 +23,9 @@
     "webpack-cli": "^4.3.1",
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.7.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/htainhtain/visitMyDigitalCity.git"
   }
 }
